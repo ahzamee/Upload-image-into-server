@@ -19,6 +19,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     FloatingActionButton fabCamera, fabUpload;
     Bitmap mBitmap;
     TextView textView;
+    String encodedImage;
 
 
     @Override
@@ -172,14 +174,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 String filePath = getImageFilePath(data);
                 if (filePath != null) {
                     mBitmap = BitmapFactory.decodeFile(filePath);
+                    encodedImage = encodeImage(mBitmap);
                     imageView.setImageBitmap(mBitmap);
                 }
             }
-
         }
 
     }
 
+    private String encodeImage(Bitmap bm)
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG,100,baos);
+        byte[] b = baos.toByteArray();
+        String encImage = "data:image/png;base64,"+Base64.encodeToString(b, Base64.DEFAULT);
+
+        return encImage;
+    }
 
     private String getImageFromFilePath(Intent data) {
         boolean isCamera = data == null || data.getData() == null;
@@ -313,13 +324,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
             RequestBody reqFile = RequestBody.create(MediaType.parse("image/*"), file);
-            MultipartBody.Part body = MultipartBody.Part.createFormData("image_file", file.getName(), reqFile);
-            MultipartBody.Part daktar_id = MultipartBody.Part.createFormData("daktar_id", "1");
-            MultipartBody.Part nid_number = MultipartBody.Part.createFormData("nid_number", "123242536");
-            RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "image_file");
+//            MultipartBody.Part body = MultipartBody.Part.createFormData("image_file", file.getName(), reqFile);
+//            MultipartBody.Part daktar_id = MultipartBody.Part.createFormData("daktar_id", encodedImage);
+//            MultipartBody.Part nid_number = MultipartBody.Part.createFormData("nid_number", "123242536");
+
+            //RequestBody name = RequestBody.create(MediaType.parse("text/plain"), "image_file");
 
 
-            Call<ResponseBody> req = apiService.postImage(body, name, daktar_id, nid_number);
+
+            Call<ResponseBody> req = apiService.postImage("7", encodedImage,"1234321");
             req.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
