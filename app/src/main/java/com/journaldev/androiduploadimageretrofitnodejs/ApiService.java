@@ -17,7 +17,7 @@ import retrofit2.http.Part;
 
 interface ApiService {
     @FormUrlEncoded
-    @POST("/api/upload_base64")
+    @POST("/api/id_verification")
     Call<ResponseBody> postImage(
 //            @Part MultipartBody.Part image,
 //            @Part("image_file") RequestBody name,
