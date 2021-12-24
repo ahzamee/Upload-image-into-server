@@ -349,7 +349,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    textView.setText("Uploaded Failed!");
+                    textView.setText("Uploaded Failed!!");
                     textView.setTextColor(Color.RED);
                     Toast.makeText(getApplicationContext(), "Request failed", Toast.LENGTH_SHORT).show();
                     t.printStackTrace();
